@@ -8,7 +8,12 @@ namespace DeterministicLockstepNetworking
 
         public Command[] Commands { get; private set; }
 
-        internal CommandFrame(uint ticks, Command[] commands)
+        public CommandFrame(uint ticks)
+        {
+            Ticks = ticks;
+        }
+
+        public CommandFrame(uint ticks, Command[] commands)
         {
             Ticks = ticks;
             Commands = commands;
