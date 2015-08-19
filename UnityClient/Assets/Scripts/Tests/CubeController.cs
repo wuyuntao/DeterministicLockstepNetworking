@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using DeterministicLockstepNetworking;
+﻿using DeterministicLockstepNetworking;
+using UnityEngine;
 
 public class CubeController : MonoBehaviour
 {
@@ -16,12 +15,23 @@ public class CubeController : MonoBehaviour
 
     Session session;
 
-    // Use this for initialization
-    void Start()
+    public static void Initialize(Session session, bool isPlayer)
     {
+        var resource = Resources.Load<GameObject>("Models/Cube/Cube");
+
+        var position = new Vector3(Random.Range(-10f, 10f), Random.Range(1f, 10f), Random.Range(-10f, 10f));
+        var cube = (GameObject)GameObject.Instantiate(resource, position, Quaternion.identity);
+        var controller = cube.GetComponent<CubeController>();
+        controller.session = session;
+
+        if (!isPlayer)
+        {
+            var material = Resources.Load<Material>("Models/Cube/Materials/Friend");
+            var renderer = cube.GetComponent<MeshRenderer>();
+            renderer.material = material;
+        }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (session != null)
@@ -46,7 +56,7 @@ public class CubeController : MonoBehaviour
             case Command.Forward:
                 {
                     var force = Vector3.forward * thrust + Vector3.up * thrust;
-                    Debug.Log(string.Format("{0} {1}", command, force));
+                    //Debug.Log(string.Format("{0} {1}", command, force));
 
                     rb.AddForce(force);
                 }
@@ -55,7 +65,7 @@ public class CubeController : MonoBehaviour
             case Command.Back:
                 {
                     var force = -1 * Vector3.forward * thrust + Vector3.up * thrust;
-                    Debug.Log(string.Format("{0} {1}", command, force));
+                    //Debug.Log(string.Format("{0} {1}", command, force));
 
                     rb.AddForce(force);
                 }
@@ -63,21 +73,21 @@ public class CubeController : MonoBehaviour
 
             case Command.Left:
                 {
-                    var torque = Vector3.left * thrust + Vector3.up * thrust;
-                    Debug.Log(string.Format("{0} {1}", command, torque));
+                    var force = Vector3.left * thrust + Vector3.up * thrust;
+                    //Debug.Log(string.Format("{0} {1}", command, torque));
 
-                    rb.AddTorque(torque);
-                    rb.AddForce(torque);
+                    rb.AddTorque(force);
+                    rb.AddForce(force);
                 }
                 break;
 
             case Command.Right:
                 {
-                    var torque = Vector3.right * thrust + Vector3.up * thrust;
-                    Debug.Log(string.Format("{0} {1}", command, torque));
+                    var force = Vector3.right * thrust + Vector3.up * thrust;
+                    //Debug.Log(string.Format("{0} {1}", command, force));
 
-                    rb.AddTorque(torque);
-                    rb.AddForce(torque);
+                    rb.AddTorque(force);
+                    rb.AddForce(force);
                 }
                 break;
 
@@ -85,16 +95,5 @@ public class CubeController : MonoBehaviour
                 Debug.LogError(string.Format("Unknown command: {0}", command));
                 break;
         }
-    }
-
-    internal static void Initialize(Session session)
-    {
-
-        var resource = Resources.Load<GameObject>("Models/Cube/Cube");
-        Debug.Log(string.Format("{0} {1}", session == null, resource == null));
-
-        var cube = GameObject.Instantiate(resource);
-        var controller = cube.GetComponent<CubeController>();
-        controller.session = session;
     }
 }

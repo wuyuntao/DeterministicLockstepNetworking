@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
-using DeterministicLockstepNetworking;
+﻿using DeterministicLockstepNetworking;
+using UnityEngine;
 
 public class LocalTest : MonoBehaviour
 {
@@ -13,8 +12,13 @@ public class LocalTest : MonoBehaviour
     void Start()
     {
         this.sessionManager = new SessionManager(1);
+        var session1 = this.sessionManager.FindSession(1);
+        var session2 = this.sessionManager.AddSession(2);
+        var session3 = this.sessionManager.AddSession(3);
 
-        CubeController.Initialize(sessionManager.FindSession(1));
+        CubeController.Initialize(session1, true);
+        CubeController.Initialize(session2, false);
+        CubeController.Initialize(session3, false);
     }
 
     // Update is called once per frame
