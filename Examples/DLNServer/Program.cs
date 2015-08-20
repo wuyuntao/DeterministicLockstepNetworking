@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DLNServer
 {
@@ -10,6 +6,14 @@ namespace DLNServer
     {
         static void Main(string[] args)
         {
+            var server = new Server(4000);
+
+            Console.WriteLine("Press any key to stop server");
+            Console.ReadKey();
+
+            server.Close();
+
+            Console.ReadKey();
         }
     }
 }

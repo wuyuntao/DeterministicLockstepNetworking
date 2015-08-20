@@ -33,16 +33,31 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DeterministicLockstepNetworking">
+      <HintPath>..\..\DeterministicLockstepNetworking\bin\Debug\DeterministicLockstepNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="FlatBuffersSchema">
+      <HintPath>..\Lib\FlatBuffersSchema\FlatBuffersSchema.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SessionManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DLNSchema\DLNSchema.csproj">
+      <Project>{11eb60b5-5605-43c4-a4bd-c14cdff8109c}</Project>
+      <Name>DLNSchema</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

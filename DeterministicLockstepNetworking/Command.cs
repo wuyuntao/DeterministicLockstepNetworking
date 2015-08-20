@@ -8,7 +8,7 @@ namespace DeterministicLockstepNetworking
 
         public uint SessionId { get; private set; }
 
-        internal Command(uint commandId, uint sessionId)
+        public Command(uint commandId, uint sessionId)
         {
             CommandId = commandId;
             SessionId = sessionId;

@@ -49,6 +49,7 @@
     <Compile Include="GeneratedCode\DLNSchema\Messages\MessageIds.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\SyncFrame.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Schema.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
