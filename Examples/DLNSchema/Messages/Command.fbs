@@ -1,0 +1,11 @@
+namespace DLNSchema.Messages;
+
+table Command {
+	commandId: uint;
+	sessionId: uint;
+}
+
+table CommandFrame {
+	ticks: uint;
+	commands: [Command];
+}

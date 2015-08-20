@@ -1,0 +1,9 @@
+include "Command.fbs";
+
+namespace DLNSchema.Messages;
+
+table SyncFrame {
+	frames: [CommandFrame];
+}
+
+root_type SyncFrame;

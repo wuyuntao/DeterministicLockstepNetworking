@@ -1,0 +1,9 @@
+include "Command.fbs";
+
+namespace DLNSchema.Messages;
+
+table InputCommand {
+	frame: CommandFrame;
+}
+
+root_type InputCommand;
