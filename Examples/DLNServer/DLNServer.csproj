@@ -36,6 +36,9 @@
     <Reference Include="DeterministicLockstepNetworking">
       <HintPath>..\..\DeterministicLockstepNetworking\bin\Debug\DeterministicLockstepNetworking.dll</HintPath>
     </Reference>
+    <Reference Include="FlatBuffers">
+      <HintPath>..\Lib\FlatBuffers\FlatBuffers.dll</HintPath>
+    </Reference>
     <Reference Include="FlatBuffersSchema">
       <HintPath>..\Lib\FlatBuffersSchema\FlatBuffersSchema.dll</HintPath>
     </Reference>
