@@ -1,0 +1,7 @@
+namespace DLNSchema.Messages;
+
+table AssignSessionId {
+	sessionId: uint;
+}
+
+root_type AssignSessionId;

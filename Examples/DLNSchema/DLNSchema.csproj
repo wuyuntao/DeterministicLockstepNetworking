@@ -43,7 +43,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="Command.cs" />
+    <Compile Include="GeneratedCode\DLNSchema\Messages\AssignSessionId.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\Command.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\CommandFrame.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\InputCommand.cs" />
@@ -55,6 +57,7 @@
   <ItemGroup />
   <ItemGroup>
     <None Include="Messages\Command.fbs" />
+    <None Include="Messages\AssignSessionId.fbs" />
     <None Include="Messages\InputCommand.fbs" />
     <None Include="Messages\MessageIds.fbs" />
     <None Include="Messages\SyncFrame.fbs" />
@@ -62,7 +65,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>cd $(ProjectDir)
-$(SolutionDir)Lib\FlatBuffers\flatc.exe -n -o GeneratedCode Messages\Command.fbs Messages\InputCommand.fbs Messages\SyncFrame.fbs Messages\MessageIds.fbs</PreBuildEvent>
+$(SolutionDir)Lib\FlatBuffers\flatc.exe -n -o GeneratedCode Messages\Command.fbs Messages\InputCommand.fbs Messages\SyncFrame.fbs Messages\AssignSessionId.fbs Messages\MessageIds.fbs</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

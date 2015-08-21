@@ -7,6 +7,7 @@ public enum MessageIds : int
 {
  SyncFrame = 1,
  InputCommand = 2,
+ AssignSessionId = 3,
 };
 
 

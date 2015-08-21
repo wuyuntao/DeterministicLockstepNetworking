@@ -1,16 +1,29 @@
 ﻿using DLNSchema.Messages;
 using FlatBuffers;
 using FlatBuffers.Schema;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace DLNSchema
 {
     public static class Schemas
     {
+        private static MessageSchema clientSchema;
+
         private static MessageSchema serverSchema;
+
+        public static MessageSchema ClientSchema
+        {
+            get
+            {
+                if (clientSchema == null)
+                {
+                    clientSchema = new MessageSchema();
+                    clientSchema.Register(MessageIds.SyncFrame, SyncFrame.GetRootAsSyncFrame);
+                    clientSchema.Register(MessageIds.AssignSessionId, AssignSessionId.GetRootAsAssignSessionId);
+                }
+
+                return clientSchema;
+            }
+        }
 
         public static MessageSchema ServerSchema
         {
@@ -107,6 +120,17 @@ namespace DLNSchema
             var commandVectorPtr = Messages.CommandFrame.CreateCommandsVector(fbb, commandPtrs);
 
             return Messages.CommandFrame.CreateCommandFrame(fbb, frame.Ticks, commandVectorPtr);
+        }
+
+        public static byte[] CreateAssignSessionId(uint sessionId)
+        {
+            var fbb = new FlatBufferBuilder(1024);
+
+            var assignSessionIdPtr = Messages.AssignSessionId.CreateAssignSessionId(fbb, sessionId);
+
+            Messages.AssignSessionId.FinishAssignSessionIdBuffer(fbb, assignSessionIdPtr);
+
+            return fbb.ToProtocolMessage(MessageIds.AssignSessionId);
         }
     }
 }
