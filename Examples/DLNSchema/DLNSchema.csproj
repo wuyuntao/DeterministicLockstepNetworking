@@ -43,6 +43,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\Command.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\CommandFrame.cs" />
     <Compile Include="GeneratedCode\DLNSchema\Messages\InputCommand.cs" />

@@ -7,14 +7,14 @@ namespace DeterministicLockstepNetworking
     {
         public uint SessionId { get; private set; }
 
-        private List<Command> commands = new List<Command>();
+        private List<ICommand> commands = new List<ICommand>();
 
         internal Session(uint sessionId)
         {
             SessionId = sessionId;
         }
 
-        internal void ReceiveCommand(Command command)
+        internal void ReceiveCommand(ICommand command)
         {
             if (command.SessionId != SessionId)
                 throw new ArgumentException("SessionId does not match");
@@ -22,7 +22,7 @@ namespace DeterministicLockstepNetworking
             this.commands.Add(command);
         }
 
-        public IEnumerable<Command> FetchCommands()
+        public IEnumerable<ICommand> FetchCommands()
         {
             if (this.commands.Count == 0)
             {
@@ -30,7 +30,7 @@ namespace DeterministicLockstepNetworking
             }
 
             var commands = this.commands;
-            this.commands = new List<Command>();
+            this.commands = new List<ICommand>();
             return commands;
         }
     }

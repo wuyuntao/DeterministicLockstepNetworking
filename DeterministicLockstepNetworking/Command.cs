@@ -2,16 +2,8 @@
 
 namespace DeterministicLockstepNetworking
 {
-    public sealed class Command
+    public interface ICommand
     {
-        public uint CommandId { get; private set; }
-
-        public uint SessionId { get; private set; }
-
-        public Command(uint commandId, uint sessionId)
-        {
-            CommandId = commandId;
-            SessionId = sessionId;
-        }
+        uint SessionId { get;  }
     }
 }

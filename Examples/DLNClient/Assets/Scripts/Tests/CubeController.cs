@@ -1,9 +1,10 @@
 ﻿using DeterministicLockstepNetworking;
+using DLNSchema;
 using UnityEngine;
 
 public class CubeController : MonoBehaviour
 {
-    public enum Command : uint
+    public enum CommandId : uint
     {
         Forward = 1,
         Back,
@@ -11,7 +12,7 @@ public class CubeController : MonoBehaviour
         Right,
     }
 
-    public float thrust = 20;
+    public float thrust = 200;
 
     Session session;
 
@@ -39,30 +40,31 @@ public class CubeController : MonoBehaviour
             var commands = session.FetchCommands();
             if (commands != null)
             {
-                foreach (var command in commands)
+                foreach (var c in commands)
                 {
-                    ReplayCommand((Command)command.CommandId);
+                    var command = (Command)c;
+                    ReplayCommand((CommandId)command.CommandId);
                 }
             }
         }
     }
 
-    void ReplayCommand(Command command)
+    void ReplayCommand(CommandId command)
     {
         var rb = GetComponent<Rigidbody>();
 
         switch (command)
         {
-            case Command.Forward:
+            case CommandId.Forward:
                 {
                     var force = Vector3.forward * thrust + Vector3.up * thrust;
-                    //Debug.Log(string.Format("{0} {1}", command, force));
+                    Debug.Log(string.Format("{0} {1}", command, force));
 
                     rb.AddForce(force);
                 }
                 break;
 
-            case Command.Back:
+            case CommandId.Back:
                 {
                     var force = -1 * Vector3.forward * thrust + Vector3.up * thrust;
                     //Debug.Log(string.Format("{0} {1}", command, force));
@@ -71,7 +73,7 @@ public class CubeController : MonoBehaviour
                 }
                 break;
 
-            case Command.Left:
+            case CommandId.Left:
                 {
                     var force = Vector3.left * thrust + Vector3.up * thrust;
                     //Debug.Log(string.Format("{0} {1}", command, torque));
@@ -81,7 +83,7 @@ public class CubeController : MonoBehaviour
                 }
                 break;
 
-            case Command.Right:
+            case CommandId.Right:
                 {
                     var force = Vector3.right * thrust + Vector3.up * thrust;
                     //Debug.Log(string.Format("{0} {1}", command, force));

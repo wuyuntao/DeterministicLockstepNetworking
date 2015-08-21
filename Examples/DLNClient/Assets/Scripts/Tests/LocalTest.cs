@@ -1,4 +1,5 @@
 ﻿using DeterministicLockstepNetworking;
+using DLNSchema;
 using UnityEngine;
 
 public class LocalTest : MonoBehaviour
@@ -30,9 +31,9 @@ public class LocalTest : MonoBehaviour
         {
             currentTicks++;
 
-            var frame = this.sessionManager.FetchSendCommands();
-            var commands = frame != null ? frame.Commands : null;
-            this.sessionManager.ReceiveCommands(new CommandFrame(currentTicks, commands));
+            var commands = this.sessionManager.FetchCommands();
+
+            this.sessionManager.ReceiveCommands(this.sessionManager.CurrentTicks + 1, commands);
 
             elapsedTime -= 0.1f;
         }
@@ -42,34 +43,36 @@ public class LocalTest : MonoBehaviour
     {
         if (Event.current.isKey)
         {
-            CubeController.Command command = 0;
+            CubeController.CommandId commandId = 0;
             switch (Event.current.keyCode)
             {
                 case KeyCode.UpArrow:
-                    command = CubeController.Command.Forward;
+                    commandId = CubeController.CommandId.Forward;
                     break;
 
                 case KeyCode.DownArrow:
-                    command = CubeController.Command.Back;
+                    commandId = CubeController.CommandId.Back;
                     break;
 
                 case KeyCode.LeftArrow:
-                    command = CubeController.Command.Left;
+                    commandId = CubeController.CommandId.Left;
                     break;
 
                 case KeyCode.RightArrow:
-                    command = CubeController.Command.Right;
+                    commandId = CubeController.CommandId.Right;
                     break;
 
                 default:
                     break;
             }
 
-            if (command != 0)
+            if (commandId != 0)
             {
-                this.sessionManager.SendCommand((uint)command);
+                var command = new Command((uint)commandId, 1);
 
-                Debug.Log(string.Format("NewCommand: {0}", command));
+                this.sessionManager.SendCommand(command);
+
+                Debug.Log(string.Format("NewCommand: {0}", commandId));
             }
         }
     }

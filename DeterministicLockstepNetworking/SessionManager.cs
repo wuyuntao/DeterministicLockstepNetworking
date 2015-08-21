@@ -9,7 +9,7 @@ namespace DeterministicLockstepNetworking
 
         private Dictionary<uint, Session> sessions = new Dictionary<uint, Session>();
 
-        private List<Command> commands = new List<Command>();
+        private List<ICommand> commands = new List<ICommand>();
 
         private uint currentTicks;
 
@@ -34,14 +34,14 @@ namespace DeterministicLockstepNetworking
             return session;
         }
 
-        public bool ReceiveCommands(CommandFrame frame)
+        public bool ReceiveCommands(uint ticks, ICommand[] commands)
         {
-            if (frame.Ticks != this.currentTicks + 1)
+            if (ticks != this.currentTicks + 1)
                 return false;
 
-            if (frame.Commands != null)
+            if (commands != null)
             {
-                foreach (var command in frame.Commands)
+                foreach (var command in commands)
                 {
                     var session = FindSession(command.SessionId);
                     if (session != null)
@@ -55,25 +55,30 @@ namespace DeterministicLockstepNetworking
                 }
             }
 
-            this.currentTicks = frame.Ticks;
+            this.currentTicks = ticks;
             return true;
         }
 
-        public void SendCommand(uint commandId)
+        public void SendCommand(ICommand command)
         {
-            this.commands.Add(new Command(commandId, this.currentSessionId));
+            this.commands.Add(command);
         }
 
-        public CommandFrame FetchSendCommands()
+        public ICommand[] FetchCommands()
         {
             if (this.commands.Count == 0)
                 return null;
 
-            var frame = new CommandFrame(this.currentTicks + 1, this.commands.ToArray());
+            var commands = this.commands.ToArray();
 
             this.commands.Clear();
 
-            return frame;
+            return commands;
+        }
+
+        public uint CurrentTicks
+        {
+            get { return this.currentTicks; }
         }
     }
 }
