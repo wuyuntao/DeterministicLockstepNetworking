@@ -5,20 +5,11 @@ namespace DeterministicLockstepNetworking
 {
     public sealed class SessionManager
     {
-        private uint currentSessionId;
-
         private Dictionary<uint, Session> sessions = new Dictionary<uint, Session>();
 
         private List<ICommand> commands = new List<ICommand>();
 
         private uint currentTicks;
-
-        public SessionManager(uint currentSessionId)
-        {
-            this.currentSessionId = currentSessionId;
-
-            AddSession(currentSessionId);
-        }
 
         public Session AddSession(uint sessionId)
         {
