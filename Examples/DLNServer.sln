@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLNServer", "DLNServer\DLNS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLNSchema", "DLNSchema\DLNSchema.csproj", "{11EB60B5-5605-43C4-A4BD-C14CDFF8109C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DLNDevClient", "DLNDevClient\DLNDevClient.csproj", "{FDB761D0-459D-4B07-B166-97F9682193E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{11EB60B5-5605-43C4-A4BD-C14CDFF8109C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11EB60B5-5605-43C4-A4BD-C14CDFF8109C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11EB60B5-5605-43C4-A4BD-C14CDFF8109C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDB761D0-459D-4B07-B166-97F9682193E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDB761D0-459D-4B07-B166-97F9682193E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDB761D0-459D-4B07-B166-97F9682193E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDB761D0-459D-4B07-B166-97F9682193E8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
