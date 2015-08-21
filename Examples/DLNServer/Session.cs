@@ -2,6 +2,7 @@
 using DLNSchema;
 using FlatBuffers.Schema;
 using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
@@ -27,17 +28,40 @@ namespace DLNServer
             ThreadPool.QueueUserWorkItem(ReadThread);
         }
 
+        public override string ToString()
+        {
+            return string.Format("{0} / {1} / {2}", base.ToString(), this.id, this.tcpClient.Client.RemoteEndPoint);
+        }
+
         #region Read
 
         private void ReadThread(object state)
         {
-            var queue = new MessageQueue(Schemas.ServerSchema);
+            var login = Schemas.CreateAssignSessionId(this.id);
+            this.networkStream.Write(login, 0, login.Length);
+            Console.WriteLine("AssignSessionId #{0}", this.id);
 
+            var frames = this.manager.FetchTotalFrames();
+            this.SynchronizeCommandFrame(frames);
+            Console.WriteLine("Synchronize initial frames: {0}", frames.Length);
+
+            var queue = new MessageQueue(Schemas.ServerSchema);
             var buffer = new byte[this.tcpClient.ReceiveBufferSize];
 
             while (this.networkStream.CanRead)
             {
-                var readSize = this.networkStream.Read(buffer, 0, buffer.Length);
+                int readSize;
+                try
+                {
+                    readSize = this.networkStream.Read(buffer, 0, buffer.Length);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Disconnected: {0}", ex.GetType());
+                    break;
+                }
+
+                Console.WriteLine("Received {0} bytes", readSize);
 
                 var bytes = new byte[readSize];
                 Array.Copy(buffer, bytes, readSize);
@@ -57,34 +81,57 @@ namespace DLNServer
             {
                 var message = (DLNSchema.Messages.InputCommand)m.Body;
 
-                if (message.Frame != null)
+                if (message.Frame != null && message.Frame.CommandsLength > 0)
                 {
                     for (int i = 0; i < message.Frame.CommandsLength; i++)
                     {
                         var command = message.Frame.GetCommands(i);
 
                         this.manager.AddCommand(new Command(command.CommandId, command.SessionId));
+
+                        Console.WriteLine("Received input command: {0} / {1}", command.CommandId, command.SessionId);
                     }
                 }
+                else
+                {
+                    Console.WriteLine("Receieved empty input command");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Received unexpected message: {0}", m.Id);
             }
         }
-        
+
         #endregion
 
         #region Write
 
-        public void SynchronizeCommandFrame(CommandFrame frame)
+        public void SynchronizeCommandFrame(params CommandFrame[] frames)
         {
-            ThreadPool.QueueUserWorkItem(WriteThread, frame);
+            ThreadPool.QueueUserWorkItem(WriteThread, frames);
         }
 
         private void WriteThread(object state)
         {
-            var bytes = Schemas.CreateSyncFrame((CommandFrame)state);
+            if (!this.networkStream.CanWrite)
+                return;
 
-            this.networkStream.Write(bytes, 0, bytes.Length);
+            var frames = (CommandFrame[])state;
+            var bytes = Schemas.CreateSyncFrame(frames);
+
+            try
+            {
+                this.networkStream.Write(bytes, 0, bytes.Length);
+
+                Console.WriteLine("{0} frames sent", frames.Length);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Disconnected: {0}", ex.GetType());
+            }
         }
-        
+
         #endregion
     }
 }

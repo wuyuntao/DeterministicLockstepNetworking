@@ -16,6 +16,8 @@ namespace DLNServer
             this.tcpListener = new TcpListener(new IPAddress(0), port);
             this.tcpListener.Start();
 
+            Console.WriteLine("Server started at {0}", this.tcpListener.Server.LocalEndPoint);
+
             ThreadPool.QueueUserWorkItem(WorkThread);
         }
 
@@ -42,6 +44,8 @@ namespace DLNServer
                     var session = new Session(sessionManager, tcpClient);
 
                     sessionManager.AddSession(session);
+
+                    Console.WriteLine("New session #{0} created", session );
                 }
                 catch (SocketException)
                 {
