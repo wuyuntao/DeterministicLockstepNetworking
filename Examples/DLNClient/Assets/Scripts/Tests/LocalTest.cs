@@ -12,14 +12,16 @@ public class LocalTest : MonoBehaviour
 
     void Start()
     {
-        this.sessionManager = new SessionManager(1);
-        var session1 = this.sessionManager.FindSession(1);
+        this.sessionManager = new SessionManager();
+        var session1 = this.sessionManager.AddSession(1);
         var session2 = this.sessionManager.AddSession(2);
         var session3 = this.sessionManager.AddSession(3);
 
-        CubeController.Initialize(session1, true);
-        CubeController.Initialize(session2, false);
-        CubeController.Initialize(session3, false);
+        var cube1 = CubeController.Initialize(session1);
+        CubeController.Initialize(session2);
+        CubeController.Initialize(session3);
+
+        cube1.ChangeColor(true);
     }
 
     // Update is called once per frame
@@ -72,7 +74,7 @@ public class LocalTest : MonoBehaviour
 
                 this.sessionManager.SendCommand(command);
 
-                Debug.Log(string.Format("NewCommand: {0}", commandId));
+                //Debug.Log(string.Format("NewCommand: {0}", commandId));
             }
         }
     }

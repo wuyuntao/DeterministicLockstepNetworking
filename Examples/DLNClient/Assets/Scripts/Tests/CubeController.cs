@@ -12,32 +12,40 @@ public class CubeController : MonoBehaviour
         Right,
     }
 
-    public float thrust = 200;
+    public float thrust = 20;
 
     Session session;
 
-    public static void Initialize(Session session, bool isPlayer)
+    public static CubeController Initialize(Session session)
     {
         var resource = Resources.Load<GameObject>("Models/Cube/Cube");
 
         var position = new Vector3(Random.Range(-10f, 10f), Random.Range(1f, 10f), Random.Range(-10f, 10f));
         var cube = (GameObject)GameObject.Instantiate(resource, position, Quaternion.identity);
-        var controller = cube.GetComponent<CubeController>();
+        cube.name = string.Format("{0}_{1}", cube.name, session.SessionId);
+
+        var controller = cube.AddComponent<CubeController>();
         controller.session = session;
 
-        if (!isPlayer)
-        {
-            var material = Resources.Load<Material>("Models/Cube/Materials/Friend");
-            var renderer = cube.GetComponent<MeshRenderer>();
-            renderer.material = material;
-        }
+        controller.ChangeColor(false);
+
+        return controller;
+    }
+
+    public void ChangeColor(bool isPlayer)
+    {
+        var materialPath = string.Format("Models/Cube/Materials/{0}", isPlayer ? "Player" : "Friend");
+        var material = Resources.Load<Material>(materialPath);
+        var renderer = GetComponent<MeshRenderer>();
+        
+        renderer.material = material;
     }
 
     void Update()
     {
-        if (session != null)
+        if (this.session != null)
         {
-            var commands = session.FetchCommands();
+            var commands = this.session.FetchCommands();
             if (commands != null)
             {
                 foreach (var c in commands)
@@ -58,7 +66,7 @@ public class CubeController : MonoBehaviour
             case CommandId.Forward:
                 {
                     var force = Vector3.forward * thrust + Vector3.up * thrust;
-                    Debug.Log(string.Format("{0} {1}", command, force));
+                    //Debug.Log(string.Format("{0} {1}", command, force));
 
                     rb.AddForce(force);
                 }
@@ -97,5 +105,10 @@ public class CubeController : MonoBehaviour
                 Debug.LogError(string.Format("Unknown command: {0}", command));
                 break;
         }
+    }
+
+    public uint SessionId
+    {
+        get { return this.session.SessionId; }
     }
 }
