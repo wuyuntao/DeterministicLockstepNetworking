@@ -12,7 +12,7 @@ public sealed class AssignSessionId : Table {
 
   public uint SessionId { get { int o = __offset(4); return o != 0 ? bb.GetUint(o + bb_pos) : (uint)0; } }
 
-  public static int CreateAssignSessionId(FlatBufferBuilder builder,
+  public static Offset<AssignSessionId> CreateAssignSessionId(FlatBufferBuilder builder,
       uint sessionId = 0) {
     builder.StartObject(1);
     AssignSessionId.AddSessionId(builder, sessionId);
@@ -21,11 +21,11 @@ public sealed class AssignSessionId : Table {
 
   public static void StartAssignSessionId(FlatBufferBuilder builder) { builder.StartObject(1); }
   public static void AddSessionId(FlatBufferBuilder builder, uint sessionId) { builder.AddUint(0, sessionId, 0); }
-  public static int EndAssignSessionId(FlatBufferBuilder builder) {
+  public static Offset<AssignSessionId> EndAssignSessionId(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return o;
+    return new Offset<AssignSessionId>(o);
   }
-  public static void FinishAssignSessionIdBuffer(FlatBufferBuilder builder, int offset) { builder.Finish(offset); }
+  public static void FinishAssignSessionIdBuffer(FlatBufferBuilder builder, Offset<AssignSessionId> offset) { builder.Finish(offset.Value); }
 };
 
 

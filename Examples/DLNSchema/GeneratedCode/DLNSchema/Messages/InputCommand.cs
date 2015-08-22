@@ -13,20 +13,20 @@ public sealed class InputCommand : Table {
   public CommandFrame Frame { get { return GetFrame(new CommandFrame()); } }
   public CommandFrame GetFrame(CommandFrame obj) { int o = __offset(4); return o != 0 ? obj.__init(__indirect(o + bb_pos), bb) : null; }
 
-  public static int CreateInputCommand(FlatBufferBuilder builder,
-      int frame = 0) {
+  public static Offset<InputCommand> CreateInputCommand(FlatBufferBuilder builder,
+      Offset<CommandFrame> frame = default(Offset<CommandFrame>)) {
     builder.StartObject(1);
     InputCommand.AddFrame(builder, frame);
     return InputCommand.EndInputCommand(builder);
   }
 
   public static void StartInputCommand(FlatBufferBuilder builder) { builder.StartObject(1); }
-  public static void AddFrame(FlatBufferBuilder builder, int frameOffset) { builder.AddOffset(0, frameOffset, 0); }
-  public static int EndInputCommand(FlatBufferBuilder builder) {
+  public static void AddFrame(FlatBufferBuilder builder, Offset<CommandFrame> frameOffset) { builder.AddOffset(0, frameOffset.Value, 0); }
+  public static Offset<InputCommand> EndInputCommand(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return o;
+    return new Offset<InputCommand>(o);
   }
-  public static void FinishInputCommandBuffer(FlatBufferBuilder builder, int offset) { builder.Finish(offset); }
+  public static void FinishInputCommandBuffer(FlatBufferBuilder builder, Offset<InputCommand> offset) { builder.Finish(offset.Value); }
 };
 
 

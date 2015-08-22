@@ -1,5 +1,4 @@
-﻿using DeterministicLockstepNetworking;
-using DLNSchema;
+﻿using DLNSchema;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -7,7 +6,7 @@ namespace DLNServer
 {
     class SessionManager
     {
-        private const int SyncInterval = 1000;
+        private const int SyncInterval = 100;
 
         private uint nextSessionId;
 

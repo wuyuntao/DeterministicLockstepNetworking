@@ -20,7 +20,7 @@ public class CubeController : MonoBehaviour
     {
         var resource = Resources.Load<GameObject>("Models/Cube/Cube");
 
-        var position = new Vector3(Random.Range(-10f, 10f), Random.Range(1f, 10f), Random.Range(-10f, 10f));
+        var position = new Vector3(session.SessionId * 10, 10, session.SessionId * 10);
         var cube = (GameObject)GameObject.Instantiate(resource, position, Quaternion.identity);
         cube.name = string.Format("{0}_{1}", cube.name, session.SessionId);
 

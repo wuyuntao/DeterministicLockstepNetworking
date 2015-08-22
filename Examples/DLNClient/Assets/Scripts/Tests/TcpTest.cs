@@ -27,7 +27,7 @@ public class TcpTest : MonoBehaviour, IClientHandler
         this.cubes.Add(CubeController.Initialize(session2));
         this.cubes.Add(CubeController.Initialize(session3));
 
-        this.client = new Client(this);
+        this.client = new Client("192.168.0.103", 4000, this);
     }
 
     // Update is called once per frame
@@ -69,17 +69,11 @@ public class TcpTest : MonoBehaviour, IClientHandler
         {
             foreach (var frame in frames)
             {
-                if (this.sessionManager.ReceiveCommands(frame.Ticks, frame.Commands))
-                {
-                    Debug.Log(string.Format("Received frame: {0} vs {1}", frame.Ticks, this.sessionManager.CurrentTicks));
-                }
-                else
+                if (!this.sessionManager.ReceiveCommands(frame.Ticks, frame.Commands))
                 {
                     Debug.LogWarning(string.Format("Received unmatched frame: {0} vs {1}", frame.Ticks, this.sessionManager.CurrentTicks));
                 }
             }
-
-            Debug.Log(string.Format("Received frames: {0}", frames.Length));
         }
     }
 

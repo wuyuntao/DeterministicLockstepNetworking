@@ -31,11 +31,11 @@ namespace DLNSchema
 
         private object framesLock = new object();
 
-        public Client(IClientHandler handler)
+        public Client(string hostname, int port, IClientHandler handler)
         {
             this.handler = handler;
             this.tcpClient = new TcpClient();
-            this.tcpClient.Connect("127.0.0.1", 4000);
+            this.tcpClient.Connect(hostname, port);
             this.networkStream = this.tcpClient.GetStream();
 
             this.handler.Log("Connected");

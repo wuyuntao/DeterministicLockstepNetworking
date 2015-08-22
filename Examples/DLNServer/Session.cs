@@ -1,8 +1,6 @@
-﻿using DeterministicLockstepNetworking;
-using DLNSchema;
+﻿using DLNSchema;
 using FlatBuffers.Schema;
 using System;
-using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 

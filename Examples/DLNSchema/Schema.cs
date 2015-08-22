@@ -43,92 +43,93 @@ namespace DLNSchema
         {
             var fbb = new FlatBufferBuilder(1024);
 
-            var framePtrs = CreateFramePtrs(fbb, frames);
-            var frameVectorPtr = Messages.SyncFrame.CreateFramesVector(fbb, framePtrs);
-            var syncFramePtr = Messages.SyncFrame.CreateSyncFrame(fbb, frameVectorPtr);
+            var oFrames = CreateFrameOffsets(fbb, frames);
+            var vFrames = Messages.SyncFrame.CreateFramesVector(fbb, oFrames);
 
-            Messages.SyncFrame.FinishSyncFrameBuffer(fbb, syncFramePtr);
+            var oSyncFrame = Messages.SyncFrame.CreateSyncFrame(fbb, vFrames);
+            Messages.SyncFrame.FinishSyncFrameBuffer(fbb, oSyncFrame);
 
             return fbb.ToProtocolMessage(MessageIds.SyncFrame);
         }
 
-        private static int[] CreateFramePtrs(FlatBufferBuilder fbb, CommandFrame[] frames)
+        private static Offset<Messages.CommandFrame>[] CreateFrameOffsets(FlatBufferBuilder fbb, CommandFrame[] frames)
         {
             if (frames == null || frames.Length == 0)
-                return new int[0];
+                return new Offset<Messages.CommandFrame>[0];
 
-            var framePtrs = new int[frames.Length];
+            var oFrames = new Offset<Messages.CommandFrame>[frames.Length];
 
             int i = 0;
             foreach (var f in frames)
             {
-                int[] commandPtrs = null;
+                Offset<Messages.Command>[] oCommands = null;
                 if (f.Commands != null && f.Commands.Length > 0)
                 {
-                    commandPtrs = new int[f.Commands.Length];
+                    oCommands = new Offset<Messages.Command>[f.Commands.Length];
 
                     int j = 0;
                     foreach (var c in f.Commands)
                     {
-                        commandPtrs[j] = Messages.Command.CreateCommand(fbb, c.CommandId, c.SessionId);
+                        oCommands[j] = Messages.Command.CreateCommand(fbb, c.CommandId, c.SessionId);
                         j++;
                     }
                 }
                 else
                 {
-                    commandPtrs = new int[0];
+                    oCommands = new Offset<Messages.Command>[0];
                 }
 
-                var commandVectorPtr = Messages.CommandFrame.CreateCommandsVector(fbb, commandPtrs);
-                framePtrs[i] = Messages.CommandFrame.CreateCommandFrame(fbb, f.Ticks, commandVectorPtr);
+                var vCommands = Messages.CommandFrame.CreateCommandsVector(fbb, oCommands);
+                oFrames[i] = Messages.CommandFrame.CreateCommandFrame(fbb, f.Ticks, vCommands);
+
+                i++;
             }
 
-            return framePtrs;
+            return oFrames;
         }
 
         public static byte[] CreateInputCommand(CommandFrame frame)
         {
             var fbb = new FlatBufferBuilder(1024);
 
-            var commandFramePtr = CreateCommandFramePtr(frame, fbb);
-            var inputCommandPtr = Messages.InputCommand.CreateInputCommand(fbb, commandFramePtr);
+            var oFrame = CreateCommandFrameOffset(frame, fbb);
 
-            Messages.InputCommand.FinishInputCommandBuffer(fbb, inputCommandPtr);
+            var oInputCommand = Messages.InputCommand.CreateInputCommand(fbb, oFrame);
+            Messages.InputCommand.FinishInputCommandBuffer(fbb, oInputCommand);
 
             return fbb.ToProtocolMessage(MessageIds.InputCommand);
         }
 
-        private static int CreateCommandFramePtr(CommandFrame frame, FlatBufferBuilder fbb)
+        private static Offset<Messages.CommandFrame> CreateCommandFrameOffset(CommandFrame frame, FlatBufferBuilder fbb)
         {
-            int[] commandPtrs = null;
+            Offset<Messages.Command>[] oCommands = null;
             if (frame.Commands != null && frame.Commands.Length > 0)
             {
-                commandPtrs = new int[frame.Commands.Length];
+                oCommands = new Offset<Messages.Command>[frame.Commands.Length];
 
                 int j = 0;
                 foreach (var c in frame.Commands)
                 {
-                    commandPtrs[j] = Messages.Command.CreateCommand(fbb, c.CommandId, c.SessionId);
+                    oCommands[j] = Messages.Command.CreateCommand(fbb, c.CommandId, c.SessionId);
                     j++;
                 }
             }
             else
             {
-                commandPtrs = new int[0];
+                oCommands = new Offset<Messages.Command>[0];
             }
 
-            var commandVectorPtr = Messages.CommandFrame.CreateCommandsVector(fbb, commandPtrs);
+            var vCommand = Messages.CommandFrame.CreateCommandsVector(fbb, oCommands);
 
-            return Messages.CommandFrame.CreateCommandFrame(fbb, frame.Ticks, commandVectorPtr);
+            return Messages.CommandFrame.CreateCommandFrame(fbb, frame.Ticks, vCommand);
         }
 
         public static byte[] CreateAssignSessionId(uint sessionId)
         {
             var fbb = new FlatBufferBuilder(1024);
 
-            var assignSessionIdPtr = Messages.AssignSessionId.CreateAssignSessionId(fbb, sessionId);
-
-            Messages.AssignSessionId.FinishAssignSessionIdBuffer(fbb, assignSessionIdPtr);
+            var oAssignSessionId = Messages.AssignSessionId.CreateAssignSessionId(fbb, sessionId);
+            Messages.AssignSessionId.FinishAssignSessionIdBuffer(fbb, oAssignSessionId);
 
             return fbb.ToProtocolMessage(MessageIds.AssignSessionId);
         }

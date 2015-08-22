@@ -10,7 +10,7 @@ namespace DLNDevClient
             Console.WriteLine("Press any key to start.");
             Console.ReadKey();
 
-            var client = new Client(new ClientHandler());
+            var client = new Client("127.0.0.1", 4000, new ClientHandler());
 
             Console.WriteLine("Press any key to stop.");
             Console.ReadKey();

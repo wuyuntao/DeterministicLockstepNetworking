@@ -15,9 +15,9 @@ public sealed class CommandFrame : Table {
   public Command GetCommands(Command obj, int j) { int o = __offset(6); return o != 0 ? obj.__init(__indirect(__vector(o) + j * 4), bb) : null; }
   public int CommandsLength { get { int o = __offset(6); return o != 0 ? __vector_len(o) : 0; } }
 
-  public static int CreateCommandFrame(FlatBufferBuilder builder,
+  public static Offset<CommandFrame> CreateCommandFrame(FlatBufferBuilder builder,
       uint ticks = 0,
-      int commands = 0) {
+      VectorOffset commands = default(VectorOffset)) {
     builder.StartObject(2);
     CommandFrame.AddCommands(builder, commands);
     CommandFrame.AddTicks(builder, ticks);
@@ -26,12 +26,12 @@ public sealed class CommandFrame : Table {
 
   public static void StartCommandFrame(FlatBufferBuilder builder) { builder.StartObject(2); }
   public static void AddTicks(FlatBufferBuilder builder, uint ticks) { builder.AddUint(0, ticks, 0); }
-  public static void AddCommands(FlatBufferBuilder builder, int commandsOffset) { builder.AddOffset(1, commandsOffset, 0); }
-  public static int CreateCommandsVector(FlatBufferBuilder builder, int[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i]); return builder.EndVector(); }
+  public static void AddCommands(FlatBufferBuilder builder, VectorOffset commandsOffset) { builder.AddOffset(1, commandsOffset.Value, 0); }
+  public static VectorOffset CreateCommandsVector(FlatBufferBuilder builder, Offset<Command>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartCommandsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static int EndCommandFrame(FlatBufferBuilder builder) {
+  public static Offset<CommandFrame> EndCommandFrame(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return o;
+    return new Offset<CommandFrame>(o);
   }
 };
 
